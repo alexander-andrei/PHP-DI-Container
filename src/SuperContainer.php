@@ -8,7 +8,7 @@ public function get_car_service(){
 return new \TestServices\Car(123);
 }
 public function get_truck_service(){
-return new \TestServices\Truck(new \TestServices\Car());
+return new \TestServices\Truck('somesqlinstance');
 }
 public function get_super_truck_service(){
 return new \TestServices\Truck($this->get_car_service());

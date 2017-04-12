@@ -1,6 +1,6 @@
 parameters:
     connection: somesqlinstance
-    user: somecoolusername
+    user: 123
 
 services:
     car_service:
@@ -9,7 +9,7 @@ services:
 
     truck_service:
         class: \TestServices\Truck
-        arguments: \TestServices\Car
+        arguments: '%connection'
 
     super_truck_service:
         class: \TestServices\Truck

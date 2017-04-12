@@ -9,6 +9,21 @@ class Compiler
 {
     private $_containerData;
     private $_services;
+    private $_params;
+
+    const ARGUMENTS_KEY = 'arguments';
+
+    const CLASS_KEY = 'class';
+
+    const CONTAINER_FILE_EXTENSION = '.php';
+
+    const SERVICE_DELIMITER = '@';
+
+    const PARAMETER_DELIMITER = '%';
+
+    const SERVICES_KEY = 'services';
+
+    const PARAMETERS_KEY = 'parameters';
 
     public function __construct()
     {
@@ -19,42 +34,62 @@ class Compiler
     {
         $data = Yaml::parse(file_get_contents('services.yml'));
 
-        $this->_services = $data['services'];
+        $this->checkIfServicesExist($data);
+        $this->checkIfParametersExist($data);
 
         $filename = $this->createContainerFile($className);
 
         $this->_containerData = file_get_contents($filename);
         $this->compileHead($className);
-        $this->compileServices($data);
+        $this->compileServices();
         $this->compileFooter($className);
     }
 
-    private function compileServices($data)
+    private function checkIfServicesExist($data)
     {
-        if (isset($data['services']))
+        if (isset($data[self::SERVICES_KEY]))
         {
-            foreach ($data['services'] as $key =>$service)
+            $this->_services = $data[self::SERVICES_KEY];
+        }
+        else
+        {
+            throw new \Exception('Cannot compile Container without any services !');
+        }
+    }
+
+    private function checkIfParametersExist($data)
+    {
+        if (isset($data[self::PARAMETERS_KEY]))
+        {
+            $this->_params = $data[self::PARAMETERS_KEY];
+        }
+        else
+        {
+            throw new \Exception('Cannot compile Container without any parameters !');
+        }
+    }
+
+    private function compileServices()
+    {
+        foreach ($this->_services as $key =>$service)
+        {
+            $this->_containerData .= sprintf("public function get_%s(){\n", $key);
+
+            if (isset($service[self::ARGUMENTS_KEY]))
             {
-                $this->_containerData .= sprintf("public function get_%s(){\n", $key);
-
-                if (isset($service['arguments']))
-                {
-                    $this->checkArgumentType($service['class'], $service['arguments']);
-                }
-                else
-                {
-                    $this->_containerData .= sprintf("return new %s();\n", $service['class']);
-                }
-
-                $this->_containerData .= "}\n";
+                $this->checkArgumentType($service[self::CLASS_KEY], $service[self::ARGUMENTS_KEY]);
             }
+            else
+            {
+                $this->_containerData .= sprintf("return new %s();\n", $service[self::CLASS_KEY]);
+            }
+
+            $this->_containerData .= "}\n";
         }
     }
 
     private function checkArgumentType($service, $argument)
     {
-        $isService = $this->checkIfArgumentIsService($argument);
-
         if (is_numeric($argument))
         {
             $this->_containerData .= sprintf("return new %s(%s);\n", $service, $argument);
@@ -63,11 +98,24 @@ class Compiler
         {
             $this->_containerData .= sprintf("return new %s(new %s());\n", $service, $argument);
         }
-        elseif($isService)
+        elseif($this->checkIfArgumentIsService($argument))
         {
-            $argument = ltrim($argument, '@');
+            $argument = ltrim($argument, self::SERVICE_DELIMITER);
 
             $this->_containerData .= sprintf("return new %s(\$this->get_%s());\n", $service, $argument);
+        }
+        elseif($this->checkIfArgumentIsParam($argument))
+        {
+            $argument = ltrim($argument, self::PARAMETER_DELIMITER);
+
+            if (is_numeric($this->_params[$argument]))
+            {
+                $this->_containerData .= sprintf("return new %s(%s);\n", $service, $this->_params[$argument]);
+            }
+            else
+            {
+                $this->_containerData .= sprintf("return new %s('%s');\n", $service, $this->_params[$argument]);
+            }
         }
         else
         {
@@ -77,7 +125,17 @@ class Compiler
 
     private function checkIfArgumentIsService($argument)
     {
-        if ($argument[0] == '@')
+        if ($argument[0] == self::SERVICE_DELIMITER)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function checkIfArgumentIsParam($argument)
+    {
+        if ($argument[0] == self::PARAMETER_DELIMITER)
         {
             return true;
         }
@@ -87,7 +145,7 @@ class Compiler
 
     private function createContainerFile($className)
     {
-        $filename = $className . '.php';
+        $filename = $className .self::CONTAINER_FILE_EXTENSION;
 
         if (file_exists($filename))
         {
@@ -112,6 +170,6 @@ class Compiler
     private function compileFooter($className)
     {
         $this->_containerData .= "}";
-        file_put_contents($className . '.php', $this->_containerData);
+        file_put_contents($className .self::CONTAINER_FILE_EXTENSION, $this->_containerData);
     }
 }
