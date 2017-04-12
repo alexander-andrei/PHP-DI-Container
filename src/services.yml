@@ -1,0 +1,16 @@
+parameters:
+    connection: somesqlinstance
+    user: somecoolusername
+
+services:
+    car_service:
+        class: \TestServices\Car
+        arguments: 123
+
+    truck_service:
+        class: \TestServices\Truck
+        arguments: \TestServices\Car
+
+    super_truck_service:
+        class: \TestServices\Truck
+        arguments: '@car_service'
