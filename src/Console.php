@@ -9,7 +9,7 @@ class Console
 {
     public function main()
     {
-        $c = new \Container\Compiler();
+        $c = new \Container\Compiler\Compiler();
         $c->compile('SuperContainer');
 
         $container = new SuperContainer();

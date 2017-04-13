@@ -1,11 +1,12 @@
 parameters:
     connection: somesqlinstance
     user: 123
+    carname: CoolCar
 
 services:
     car_service:
         class: \TestServices\Car
-        arguments: [123, '@truck_service', \TestServices\Truck, string, '%connection']
+        arguments: [222, '@engine_service', \TestServices\CarSoundType, CoolLogo, '%carname']
 
     truck_service:
         class: \TestServices\Truck
@@ -14,3 +15,6 @@ services:
     super_truck_service:
         class: \TestServices\Truck
         arguments: '@car_service'
+
+    engine_service:
+        class: \TestServices\CarEngine
