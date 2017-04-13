@@ -10,6 +10,8 @@ use Container\Compiler\Validator\GeneralServiceValidator;
 /**
  * Class Compiler
  * @package Container\Compiler
+ *
+ * @author Andrei.Caprar
  */
 class Compiler implements PhpCompilerInterface
 {

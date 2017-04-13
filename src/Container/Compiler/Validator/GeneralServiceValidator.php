@@ -5,6 +5,8 @@ namespace Container\Compiler\Validator;
 /**
  * Class GeneralServiceValidator
  * @package Container\Compiler\Validator
+ *
+ * @author Andrei.Caprar
  */
 class GeneralServiceValidator implements ServiceValidatorInterface
 {

@@ -5,6 +5,8 @@ namespace Container\Compiler;
 /**
  * Interface PhpCompilerInterface
  * @package Container\Compiler
+ *
+ * @author Andrei.Caprar
  */
 interface PhpCompilerInterface
 {

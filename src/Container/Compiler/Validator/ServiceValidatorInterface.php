@@ -5,6 +5,8 @@ namespace Container\Compiler\Validator;
 /**
  * Interface ServiceValidatorInterface
  * @package Container\Compiler\Validator
+ *
+ * @author Andrei.Caprar
  */
 interface ServiceValidatorInterface
 {

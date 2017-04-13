@@ -5,6 +5,8 @@ namespace Container\Compiler\File;
 /**
  * Interface FileHandlerInterface
  * @package Container\Compiler\File
+ *
+ * @author Andrei.Caprar
  */
 interface FileHandlerInterface
 {

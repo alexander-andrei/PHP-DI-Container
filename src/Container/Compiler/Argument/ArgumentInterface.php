@@ -3,10 +3,12 @@
 namespace Container\Compiler\Argument;
 
 /**
+ * Handles service argument logic.
+ *
  * Interface ArgumentInterface
  * @package Container\Compiler\Argument
  *
- * Handles service argument logic.
+ * @author Andrei.Caprar
  */
 interface ArgumentInterface
 {

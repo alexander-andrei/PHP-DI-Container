@@ -5,6 +5,8 @@ namespace Container\Compiler\Argument;
 /**
  * Class ArgumentLogic
  * @package Container\Compiler\Argument
+ *
+ * @author Andrei.Caprar
  */
 class ArgumentLogic implements ArgumentInterface
 {

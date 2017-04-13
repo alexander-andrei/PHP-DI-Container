@@ -8,6 +8,8 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Class FileHandler
  * @package Container\Compiler\File
+ *
+ * @author Andrei.Caprar
  */
 class FileHandler implements FileHandlerInterface
 {
