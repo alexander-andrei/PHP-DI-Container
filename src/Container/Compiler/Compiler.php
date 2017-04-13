@@ -72,6 +72,12 @@ class Compiler implements PhpCompilerInterface
     public function compile(string $className, string $serviceFileLocation)
     {
         $data               = $this->_fileHandler->getFileData($serviceFileLocation);
+
+        if ($data == false)
+        {
+            return;
+        }
+
         $this->_services    = $this->_serviceValidator->checkIfServicesExist($data);
         $this->_params      = $this->_serviceValidator->checkIfParametersExist($data);
 

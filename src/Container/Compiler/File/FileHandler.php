@@ -37,14 +37,14 @@ class FileHandler implements FileHandlerInterface
             file_put_contents($fileTimeName, filemtime($fileLocation));
         }
 
-        if ($pastFileTime != $currentFileTime && $pastFileTime)
+        if ($pastFileTime != $currentFileTime)
         {
             file_put_contents($fileTimeName, filemtime($fileLocation));
             return Yaml::parse(file_get_contents($fileLocation));
         }
         else
         {
-            exit;
+            return false;
         }
     }
 

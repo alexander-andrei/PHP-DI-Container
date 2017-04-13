@@ -6,7 +6,7 @@ parameters:
 services:
     car_service:
         class: \TestServices\Car
-        arguments: [222, '@engine_service', \TestServices\CarSoundType, CoolLogo, '%carname']
+        arguments: [112, '@engine_service', \TestServices\CarSoundType, CoolLogo, '%carname']
 
     truck_service:
         class: \TestServices\Truck

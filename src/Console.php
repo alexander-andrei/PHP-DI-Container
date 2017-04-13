@@ -15,7 +15,7 @@ class Console
         $container = new SuperContainer();
         $car = $container->get('car_service');
 
-        $car->runTest();
+        var_dump($car);
     }
 }
 

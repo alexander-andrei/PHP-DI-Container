@@ -18,7 +18,7 @@ class SuperContainer
         }
 
         return new \TestServices\Car(
-            222,
+            112,
             $this->get_engine_service(),
             new \TestServices\CarSoundType(),
             'CoolLogo',
