@@ -65,12 +65,13 @@ class Compiler implements PhpCompilerInterface
 
     /**
      * @param string $className
+     * @param string $serviceFileLocation
      *
      * @return null
      */
-    public function compile(string $className)
+    public function compile(string $className, string $serviceFileLocation)
     {
-        $data               = $this->_fileHandler->getFileData('services.yml');
+        $data               = $this->_fileHandler->getFileData($serviceFileLocation);
         $this->_services    = $this->_serviceValidator->checkIfServicesExist($data);
         $this->_params      = $this->_serviceValidator->checkIfParametersExist($data);
 
@@ -91,7 +92,7 @@ class Compiler implements PhpCompilerInterface
         foreach ($this->_services as $key =>$service)
         {
             $this->_containerData .= sprintf("public function get_%s(){\n", $key);
-
+            $this->_containerData .= "static \$count = 0;\$count++;if (\$count > 3) {throw new Exception('You have a circular dependency in the service' . __METHOD__);}";
             if (isset($service[self::ARGUMENTS_KEY]))
             {
                 $this->_containerData .= $this

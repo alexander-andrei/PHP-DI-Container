@@ -14,7 +14,8 @@ interface PhpCompilerInterface
      * Compile the services.
      *
      * @param string $serviceName
+     * @param string $serviceFileLocation
      * @return mixed
      */
-    public function compile(string $serviceName);
+    public function compile(string $serviceName, string $serviceFileLocation);
 }

@@ -10,10 +10,10 @@ class Console
     public function main()
     {
         $c = new \Container\Compiler\Compiler();
-        $c->compile('SuperContainer');
+        $c->compile('SuperContainer', 'services.yml');
 
         $container = new SuperContainer();
-        $car = $container->get('truck_service');
+        $car = $container->get('car_service');
 
         $car->runTest();
     }

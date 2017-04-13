@@ -18,4 +18,4 @@ services:
 
     engine_service:
         class: \TestServices\CarEngine
-        arguments: '@super_truck_service'
+        arguments: '22'
