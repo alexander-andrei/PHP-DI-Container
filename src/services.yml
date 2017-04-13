@@ -5,7 +5,7 @@ parameters:
 services:
     car_service:
         class: \TestServices\Car
-        arguments: 123
+        arguments: [123, '@truck_service', \TestServices\Truck, string, '%connection']
 
     truck_service:
         class: \TestServices\Truck

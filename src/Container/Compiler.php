@@ -90,37 +90,57 @@ class Compiler
 
     private function checkArgumentType($service, $argument)
     {
-        if (is_numeric($argument))
-        {
-            $this->_containerData .= sprintf("return new %s(%s);\n", $service, $argument);
-        }
-        elseif(class_exists($argument))
-        {
-            $this->_containerData .= sprintf("return new %s(new %s());\n", $service, $argument);
-        }
-        elseif($this->checkIfArgumentIsService($argument))
-        {
-            $argument = ltrim($argument, self::SERVICE_DELIMITER);
+        $returnType = sprintf("return new %s(", $service);
 
-            $this->_containerData .= sprintf("return new %s(\$this->get_%s());\n", $service, $argument);
-        }
-        elseif($this->checkIfArgumentIsParam($argument))
+        if (is_array($argument))
         {
-            $argument = ltrim($argument, self::PARAMETER_DELIMITER);
+            $count = 0;
+            foreach ($argument as $a)
+            {
+                if (is_numeric($a))
+                {
+                    $returnType .= sprintf("%s", $a);
+                }
+                elseif(class_exists($a))
+                {
+                    $returnType .= sprintf("new %s()", $a);
+                }
+                elseif($this->checkIfArgumentIsService($a))
+                {
+                    $a = ltrim($a, self::SERVICE_DELIMITER);
 
-            if (is_numeric($this->_params[$argument]))
-            {
-                $this->_containerData .= sprintf("return new %s(%s);\n", $service, $this->_params[$argument]);
-            }
-            else
-            {
-                $this->_containerData .= sprintf("return new %s('%s');\n", $service, $this->_params[$argument]);
+                    $returnType .= sprintf("\$this->get_%s()", $a);
+                }
+                elseif($this->checkIfArgumentIsParam($a))
+                {
+                    $a = ltrim($a, self::PARAMETER_DELIMITER);
+
+                    if (is_numeric($this->_params[$a]))
+                    {
+                        $returnType .= sprintf("%s", $this->_params[$a]);
+                    }
+                    else
+                    {
+                        $returnType .= sprintf("'%s'", $this->_params[$a]);
+                    }
+                }
+                else
+                {
+                    $returnType .= sprintf("'%s'", $a);
+                }
+
+                if ($count != count($argument) - 1)
+                {
+                    $returnType .= ', ';
+                }
+
+                $count++;
             }
         }
-        else
-        {
-            $this->_containerData .= sprintf("return new %s('%s');\n", $service, $argument);
-        }
+
+        $returnType .= ");";
+
+        $this->_containerData .= $returnType;
     }
 
     private function checkIfArgumentIsService($argument)
