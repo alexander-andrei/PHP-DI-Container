@@ -22,13 +22,35 @@ class FileHandler implements FileHandlerInterface
      * @param string $fileLocation
      * @return array
      */
-    public function getFileData(string $fileLocation) : array
+    public function getFileData(string $fileLocation)
     {
-        return Yaml::parse(file_get_contents($fileLocation));
+        $fileTimeName = 'changetime';
+
+        $pastFileTime = null;
+        $currentFileTime = filemtime($fileLocation);
+        if (file_exists($fileTimeName))
+        {
+            $pastFileTime = (int) file_get_contents($fileTimeName);
+        }
+        else
+        {
+            file_put_contents($fileTimeName, filemtime($fileLocation));
+        }
+
+        if ($pastFileTime != $currentFileTime && $pastFileTime)
+        {
+            file_put_contents($fileTimeName, filemtime($fileLocation));
+            return Yaml::parse(file_get_contents($fileLocation));
+        }
+        else
+        {
+            exit;
+        }
     }
 
     /**
      * @param string $className
+     * @return null
      */
     public function createContainerFile(string $className)
     {
@@ -53,6 +75,7 @@ class FileHandler implements FileHandlerInterface
 
     /**
      * @param string $data
+     * @return null
      */
     public function appendServicesToContainerFile(string $data)
     {

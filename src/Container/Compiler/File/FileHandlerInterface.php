@@ -19,9 +19,8 @@ interface FileHandlerInterface
      * Returns data from a service file.
      *
      * @param string $fileLocation
-     * @return array
      */
-    public function getFileData(string $fileLocation) : array;
+    public function getFileData(string $fileLocation);
 
     /**
      * Creates container file based on passed parameter.
