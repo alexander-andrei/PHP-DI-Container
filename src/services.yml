@@ -14,7 +14,8 @@ services:
 
     super_truck_service:
         class: \TestServices\Truck
-        arguments: '@car_service'
+        arguments: '@engine_service'
 
     engine_service:
         class: \TestServices\CarEngine
+        arguments: '@super_truck_service'

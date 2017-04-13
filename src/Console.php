@@ -13,7 +13,7 @@ class Console
         $c->compile('SuperContainer');
 
         $container = new SuperContainer();
-        $car = $container->get('car_service');
+        $car = $container->get('truck_service');
 
         $car->runTest();
     }

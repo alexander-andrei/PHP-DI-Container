@@ -25,37 +25,7 @@ class ArgumentLogic implements ArgumentInterface
             $count = 0;
             foreach ($argument as $a)
             {
-                if (is_numeric($a))
-                {
-                    $returnType .= sprintf("%s", $a);
-                }
-                elseif(class_exists($a))
-                {
-                    $returnType .= sprintf("new %s()", $a);
-                }
-                elseif($this->_checkIfArgumentIsService($a))
-                {
-                    $a = ltrim($a, self::SERVICE_DELIMITER);
-
-                    $returnType .= sprintf("\$this->get_%s()", $a);
-                }
-                elseif($this->_checkIfArgumentIsParam($a))
-                {
-                    $a = ltrim($a, self::PARAMETER_DELIMITER);
-
-                    if (is_numeric($params[$a]))
-                    {
-                        $returnType .= sprintf("%s", $params[$a]);
-                    }
-                    else
-                    {
-                        $returnType .= sprintf("'%s'", $params[$a]);
-                    }
-                }
-                else
-                {
-                    $returnType .= sprintf("'%s'", $a);
-                }
+                $returnType .= $this->_createReturnType($params, $a);
 
                 if ($count != count($argument) - 1)
                 {
@@ -64,6 +34,10 @@ class ArgumentLogic implements ArgumentInterface
 
                 $count++;
             }
+        }
+        else
+        {
+            $returnType .= $this->_createReturnType($params, $argument);
         }
 
         $returnType .= ");";
@@ -97,5 +71,45 @@ class ArgumentLogic implements ArgumentInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param array $params
+     * @param string $a
+     * @return string
+     */
+    private function _createReturnType(array $params, string $a)
+    {
+        if (is_numeric($a))
+        {
+            return sprintf("%s", $a);
+        }
+        elseif(class_exists($a))
+        {
+            return sprintf("new %s()", $a);
+        }
+        elseif($this->_checkIfArgumentIsService($a))
+        {
+            $a = ltrim($a, self::SERVICE_DELIMITER);
+
+            return sprintf("\$this->get_%s()", $a);
+        }
+        elseif($this->_checkIfArgumentIsParam($a))
+        {
+            $a = ltrim($a, self::PARAMETER_DELIMITER);
+
+            if (is_numeric($params[$a]))
+            {
+                return sprintf("%s", $params[$a]);
+            }
+            else
+            {
+                return sprintf("'%s'", $params[$a]);
+            }
+        }
+        else
+        {
+            return sprintf("'%s'", $a);
+        }
     }
 }

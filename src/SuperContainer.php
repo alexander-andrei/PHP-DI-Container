@@ -7,10 +7,9 @@ return $this->$method();
 public function get_car_service(){
 return new \TestServices\Car(222, $this->get_engine_service(), new \TestServices\CarSoundType(), 'CoolLogo', 'CoolCar');}
 public function get_truck_service(){
-return new \TestServices\Truck();}
+return new \TestServices\Truck('somesqlinstance');}
 public function get_super_truck_service(){
-return new \TestServices\Truck();}
+return new \TestServices\Truck($this->get_engine_service());}
 public function get_engine_service(){
-return new \TestServices\CarEngine();
-}
+return new \TestServices\CarEngine($this->get_super_truck_service());}
 }
